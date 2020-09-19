@@ -48,7 +48,7 @@ def stocks_list(request):
 
         '''For Storing data in Master Log'''
         master_log_ser = MasterLogSerializer(data=request.data)
-        master_log_ser.initial_data['item_id'] = request.data['id']
+        master_log_ser.initial_data['item'] = request.data['id']
         master_log_ser.initial_data['item_log_id'] = new_log.id
         master_log_ser.initial_data['item_type'] = "rawMaterial"
         master_log_ser.initial_data['action'] = "ADD"
@@ -104,7 +104,7 @@ def product_list(request):
 
             '''For Storing data in Master Log'''
             master_log_ser = MasterLogSerializer(data=request.data)
-            master_log_ser.initial_data['item_id'] = request.data['id']
+            master_log_ser.initial_data['item'] = request.data['id']
             master_log_ser.initial_data['item_log_id'] = new_log.id
             master_log_ser.initial_data['item_type'] = "product"
             if request.data['quantity'] > 0:
@@ -231,7 +231,7 @@ def product_log_list(request):
 
         '''For Storing data in Master Log'''
         master_log_ser = MasterLogSerializer(data=request.data)
-        master_log_ser.initial_data['item_id'] = request.data['product_id']
+        master_log_ser.initial_data['item'] = request.data['product_id']
         master_log_ser.initial_data['item_log_id'] = prod_row.id
         master_log_ser.initial_data['item_type'] = "product"
         master_log_ser.initial_data['action'] = "UPDATE"
@@ -336,7 +336,7 @@ def raw_material_log_list(request):
 
         '''For Storing data in Master Log'''
         master_log_ser = MasterLogSerializer(data=request.data)
-        master_log_ser.initial_data['item_id'] = request.data['raw_material_id']
+        master_log_ser.initial_data['item'] = request.data['raw_material_id']
         master_log_ser.initial_data['item_log_id'] = raw_material_row.id
         master_log_ser.initial_data['item_type'] = "rawMaterial"
         master_log_ser.initial_data['action'] = "UPDATE"
