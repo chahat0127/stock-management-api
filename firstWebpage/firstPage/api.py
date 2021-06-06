@@ -270,7 +270,7 @@ def product_log_list(request):
                 raw_material.save()
 
         #if prod_name in sub_products:
-        if prod.isRawMaterial:
+        if product.isRawMaterial:
             arm = RawMaterial.objects.get(item_name=prod_name)
             arm.quantity = product.quantity
             arm.save()
@@ -374,10 +374,9 @@ def get_sale_history(request):
     if request.method == 'GET':
         paginator = LimitOffsetPagination()
         if request.query_params.get('date'):
-            queryset = MasterLog.objects.filter(action='SALE').select_related('item').filter(date=request.query_params.get('date')).order_by('-time')
-
+            queryset = MasterLog.objects.filter(action='SALE').filter(date=request.query_params.get('date')).order_by('-time')
         else:
-            queryset = MasterLog.objects.filter(action='SALE').select_related('item').order_by('-date', '-time')
+            queryset = MasterLog.objects.filter(action='SALE').order_by('-date', '-time')
 
         context = paginator.paginate_queryset(queryset, request)
         serializer = MasterLogResponseSerializer(context, many=True)
