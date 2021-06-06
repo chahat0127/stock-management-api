@@ -4,14 +4,14 @@ from datetime import datetime
 
 
 class Products(models.Model):
-    product_name = models.CharField(max_length=30)
+    product_name = models.CharField(max_length=70)
     quantity = models.FloatField()
     order = models.IntegerField(default=1)
     isRawMaterial = models.BooleanField(blank=True)
 
 
 class RawMaterial(models.Model):
-    item_name = models.CharField(max_length=30)
+    item_name = models.CharField(max_length=70)
     quantity = models.FloatField()
     unit = models.CharField(max_length=30)
     isProduct = models.BooleanField(blank=True)
@@ -41,7 +41,7 @@ class RawMaterialLog(models.Model):
 
 
 class MasterLog(models.Model):
-    item = models.ForeignKey(Products, on_delete=models.CASCADE)  # product id or raw material id
+    item = models.IntegerField()  # product id or raw material id
     item_log_id = models.IntegerField()  # product log id or raw material id
     quantity = models.FloatField()
     # user_id = models.ForeignKey(User, on_delete=models.CASCADE)

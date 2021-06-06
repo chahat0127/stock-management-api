@@ -25,11 +25,10 @@ from django.http import HttpResponse
 def stocks_list(request):
     
     if request.method == 'GET':
-        sub_products = ['Armature', 'Head Upper Housing 1', 'Head Upper Housing 2', 'Valve Kit Final', 'Drive Housing',
-                        'Pipe Upper Housing', 'MS Pipe Plastic', 'Pipe Lower Housing 1', 'MS Pipe Steel',
-                        'Pipe Lower Housing 2']
-        queryset = RawMaterial.objects.all()
-        queryset = queryset.exclude(item_name__in=sub_products)
+        # sub_products = ['Copper Coil 24', 'Copper Coil 36', 'Aluminium Coil 24', 'Aluminium Coil 36', 'Hero Body with Lock',
+        #                 'Plunger with Rubber and Spring', 'Pipe with Bush', 'Hero with Plunger Assembly', 'EC with Plunger Assembly']
+        queryset = RawMaterial.objects.filter(isProduct=False).order_by('item_name')
+        #queryset = queryset.exclude(item_name__in=sub_products)
         serializer = RawMaterialSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -117,7 +116,7 @@ def product_list(request):
                 master_log_ser.save()
             print(master_log_ser.errors)
 
-            '''Updating the quantity value in the raw_material table '''
+            '''Updating the quantity value in the raw_material table , that is the ADD action is selected '''
             # sub_products = ['Armature', 'Head Upper Housing 1', 'Head Upper Housing 2', 'Valve Kit Final',
             #                 'Drive Housing', 'Pipe Upper Housing', 'MS Pipe Plastic', 'Pipe Lower Housing 1',
             #                 'MS Pipe Steel', 'Pipe Lower Housing 2']
@@ -147,7 +146,7 @@ def product_list(request):
             new_data = request.data
             prod = Products.objects.get(id=p_id)
             prod_name = prod.product_name
-            new_data['quantity'] = new_data['quantity'] + qty
+            new_data['quantity'] = new_data['quantity'] + qty    ### qty is the quantity of the product before
             new_data['product_name'] = prod_name
 
             # if prod_name in sub_products:  # request.data['id']
@@ -252,11 +251,9 @@ def product_log_list(request):
         except ObjectDoesNotExist:
             master_row = None
 
-        sub_products = ['Armature', 'Head Upper Housing 1', 'Head Upper Housing 2', 'Valve Kit Final', 'Drive Housing',
-                        'Pipe Upper Housing', 'MS Pipe Plastic', 'Pipe Lower Housing 1', 'MS Pipe Steel',
-                        'Pipe Lower Housing 2']
+        # sub_products = ['Copper Coil 24', 'Copper Coil 36', 'Aluminium Coil 24', 'Aluminium Coil 36', 'Hero Body with Lock',
+        #                 'Plunger with Rubber and Spring', 'Pipe with Bush', 'Hero with Plunger Assembly', 'EC with Plunger Assembly']
         if master_row is None:
-
             p_id = request.data['product_id']
             item_list = RawMaterialMapping.objects.filter(product_type_id=p_id)
             # product_qty = request.data['quantity']
@@ -265,13 +262,15 @@ def product_log_list(request):
                 rm_id = item.raw_material_type_id
                 raw_material = RawMaterial.objects.get(id=rm_id)
                 raw_material.quantity = raw_material.quantity + (old_qty-new_qty) * no_of_parts
-                if raw_material.item_name in sub_products:
+                #if raw_material.item_name in sub_products:
+                if raw_material.isProduct:
                     arm_prod = Products.objects.get(product_name=raw_material.item_name)
                     arm_prod.quantity = raw_material.quantity
                     arm_prod.save()
                 raw_material.save()
 
-        if prod_name in sub_products:
+        #if prod_name in sub_products:
+        if prod.isRawMaterial:
             arm = RawMaterial.objects.get(item_name=prod_name)
             arm.quantity = product.quantity
             arm.save()
