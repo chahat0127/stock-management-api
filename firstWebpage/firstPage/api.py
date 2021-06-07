@@ -374,9 +374,9 @@ def get_sale_history(request):
     if request.method == 'GET':
         paginator = LimitOffsetPagination()
         if request.query_params.get('date'):
-            queryset = MasterLog.objects.filter(action='SALE').filter(date=request.query_params.get('date')).order_by('-time')
+            queryset = MasterLog.objects.filter(action='SALE').select_related('item').filter(date=request.query_params.get('date')).order_by('-time')
         else:
-            queryset = MasterLog.objects.filter(action='SALE').order_by('-date', '-time')
+            queryset = MasterLog.objects.filter(action='SALE').select_related('item').order_by('-date', '-time')
 
         context = paginator.paginate_queryset(queryset, request)
         serializer = MasterLogResponseSerializer(context, many=True)

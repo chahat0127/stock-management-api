@@ -126,7 +126,7 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
-CORS_ORIGIN_WHITELIST = ('localhost:4200',)
+CORS_ORIGIN_WHITELIST = [' https://localhost:4200', 'https://127.0.0.1:4200', 'http://stockmanagement-gsbt.surge.sh']
 CORS_ALLOW_METHODS = (
     'DELETE',
     'GET',
